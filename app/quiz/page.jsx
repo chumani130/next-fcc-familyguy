@@ -10,6 +10,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { TbArrowBigRightFilled } from 'react-icons/tb'
 
+export async function getRandomQuizQuestion() {
+  const data = await fetch(`${endpoint}/quiz/random`, { cache: 'no-store' })
+
+  if (!data.ok) {
+    throw new Error('Failed to fetch data')
+  }
+
+  return data.json()
+}
+
 export default async function Page() {
   const data = await getRandomQuizQuestion()
 
