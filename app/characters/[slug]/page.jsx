@@ -1,4 +1,15 @@
-import { getAllCharacters } from '@/lib/characters'
+/**
+Renders a Next.js page component that displays detailed information about a character, including their name, occupations, description, images, skills, and famous quotes.
+@component
+@param {Object} props - The component props.
+@param {Object} props.params - The parameters passed to the page component.
+@param {string} props.params.slug - The slug of the character.
+@returns {JSX.Element} The rendered page component.
+*/
+
+import { Container } from '@/components'
+import { getAllCharacters, getCharacterBySlug } from '@/lib/characters'
+import Image from 'next/image'
 
 export const dynamicParams = false
 
@@ -7,18 +18,8 @@ export async function generateStaticParams() {
   return characters.map(character => ({ slug: character.slug }))
 }
 
-export async function getCharacterBySlug(slug) {
-  const data = await fetch(`${endpoint}/characters/${slug}`)
-
-  if (!data.ok) {
-    throw new Error('Failed to fetch data')
-  }
-
-  return data.json()
-}
-
 export default async function Page({ params }) {
-  const { character, character_qoutes } = await getCharacterBySlug(params.slug)
+  const { character, character_quotes } = await getCharacterBySlug(params.slug)
 
   return (
     <Container className="flex flex-col gap-5 py-5" as="main">
@@ -73,17 +74,17 @@ export default async function Page({ params }) {
           </ul>
         </>
       )}
-      {character_qoutes && (
+      {character_quotes && (
         <>
-          <h2 className="text-xl font-bold">Famous Qoutes</h2>
+          <h2 className="text-xl font-bold">Famous Quotes</h2>
           <ul className="grid gap-5">
-            {character_qoutes.map((item, idx) => {
+            {character_quotes.map((item, idx) => {
               return (
                 <li
                   className="p-2 italic text-gray-400 border-l-4 border-green-400 rounded-md"
                   key={item.idx}
                 >
-                  {item.qoute}
+                  {item.quote}
                 </li>
               )
             })}
